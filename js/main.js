@@ -19,8 +19,29 @@ var Car = Vehicle.extend({
     }
 });
 
-var car = new Car({
-    registrationNumber: 'XLI887',
-    colour: 'Blue',
+
+var Cars = Backbone.Collection.extend({
+    model: Car,
 });
-car.start();
+
+var cars = new Cars([
+        new Car({ registrationNumber: 'XLI887', colour: 'Blue' }),
+        new Car({ registrationNumber: 'ZNP123', colour: 'Blue' }),
+        new Car({ registrationNumber: 'XUV456', colour: 'Gray' }),
+    ]);
+
+var blueCars = cars.where({ colour: 'Blue' });
+var findCar = cars.findWhere({ registrationNumber: 'XLI887' });
+
+console.log("Blue cars ", blueCars);
+console.log("findCar ", findCar);
+
+console.log("cars before removal ", cars);
+cars.remove(findCar);
+console.log("cars after removal ", cars);
+
+console.log("Vehicles as JSON", cars.toJSON());
+
+cars.each(car => {
+    console.log(car.toJSON());
+});
