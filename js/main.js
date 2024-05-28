@@ -19,10 +19,36 @@ var Car = Vehicle.extend({
     }
 });
 
-
 var Cars = Backbone.Collection.extend({
     model: Car,
 });
+
+var CarView = Backbone.View.extend({
+    tagName: 'li',
+
+    render: function () {
+        this.$el.html(this.model.get('registrationNumber'));
+        return this;
+    }
+});
+
+
+var CarsView = Backbone.View.extend({
+    tagName: 'ul',
+
+    render: function() {
+        var self = this;
+        this.collection.each(car => {
+            var carView = new CarView({
+                model: car
+            });
+            self.$el.append(carView.render().$el);
+        });
+        return this;
+    }
+});
+
+
 
 var cars = new Cars([
         new Car({ registrationNumber: 'XLI887', colour: 'Blue' }),
@@ -30,6 +56,10 @@ var cars = new Cars([
         new Car({ registrationNumber: 'XUV456', colour: 'Gray' }),
     ]);
 
+    var carsView = new CarsView({ collection: cars });
+    $("#container").html(carsView.render().$el);
+
+    /*
 var blueCars = cars.where({ colour: 'Blue' });
 var findCar = cars.findWhere({ registrationNumber: 'XLI887' });
 
@@ -45,3 +75,4 @@ console.log("Vehicles as JSON", cars.toJSON());
 cars.each(car => {
     console.log(car.toJSON());
 });
+*/
